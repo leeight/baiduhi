@@ -86,7 +86,7 @@ class BaiduHi(object):
         self.password = password
         self.log = logger
 
-        #cj = cookielib.CookieJar() # nor FileCookieJar
+        # cj = cookielib.CookieJar() # nor FileCookieJar
         cj = cookielib.LWPCookieJar(__cookies__)
         cp = urllib2.HTTPCookieProcessor(cj)
         opener = urllib2.build_opener(cp)
@@ -126,7 +126,7 @@ class BaiduHi(object):
         ret.read()
         ret = self._apiReqest('check', v=30, time=timechecksum())
         if ret['result'] == 'ok':
-            self._cookiejar.save()
+            # self._cookiejar.save()
             # self.password = None
             return True
         elif stage >= 2:
@@ -395,9 +395,9 @@ class BaiduHi(object):
         url = 'https://passport.baidu.com/?verifypic&t=%d' % timestamp()
         req = urllib2.Request(url)
         data = self._opener.open(req).read()
-        with open('./pic.png', 'wb') as fp:
+        with open('./pic.jpg', 'wb') as fp:
             fp.write(data)
-            self.log.info('Verify code pic download ok! `./pic.png`')
+            self.log.info('Verify code pic download ok! `./pic.jpg`')
         return raw_input('plz input code:').strip()
 
     def _apiReqest(self, api, method='GET', extraData=dict(), _retryLimit=2, **params):
