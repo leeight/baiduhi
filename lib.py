@@ -134,6 +134,7 @@ class BaiduHi(object):
         assert ret['result'] == 'offline'
         req = urllib2.Request('http://passport.baidu.com/api/?login&tpl=mn&time=%d' % timestamp())
         data = self._opener.open(req).read().strip()[1:-1] # remove brackets
+        data = re.sub(r'\s', '', data)  # fix python 2.6 eval issue
         data = eval(data, type('Dummy', (dict,), dict(__getitem__=lambda s,n:n))())
         if int(data['error_no']) != 0:
             # FATAL error
@@ -141,12 +142,13 @@ class BaiduHi(object):
             return False
         param_out = data['param_out']
         param_in = data['param_in']
-        params = {v: param_out[k.replace('name', 'contex')] \
-                      for k, v in param_out.items() \
-                      if k.endswith('_name')}
-        params.update({v: param_in[k.replace('name', 'value')] \
-                           for k, v in param_in.items() \
-                           if k.endswith('_name')})
+        params = {}
+        for k, v in param_out.items():
+            if k.endswith('_name'):
+                params[v] = param_out[k.replace('name', 'contex')]
+        for k, v in param_in.items():
+            if k.endswith('_name'):
+                params[v] = param_in[k.replace('name', 'value')]
         self.log.debug('Login params: %s', params)
         params['username'] = self.username
         params['password'] = self.password
