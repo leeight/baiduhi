@@ -42,8 +42,7 @@ def timechecksum():
 
 # init logger
 logger = logging.getLogger('BaiduHi')
-#logger.setLevel(logging.DEBUG)
-logger.setLevel(logging.INFO)
+logger.setLevel(-1)
 formatter = logging.Formatter('%(levelname)s: %(asctime)s: %(name)s * %(thread)d %(message)s',
                               datefmt='%m-%d %H:%M:%S')
 
@@ -87,7 +86,8 @@ class BaiduHi(object):
         self.log = logger
 
         # cj = cookielib.CookieJar() # nor FileCookieJar
-        cj = cookielib.LWPCookieJar(__cookies__)
+        # cj = cookielib.LWPCookieJar(__cookies__)
+        cj = cookielib.MozillaCookieJar(__cookies__)
         cp = urllib2.HTTPCookieProcessor(cj)
         opener = urllib2.build_opener(cp)
         opener.addheaders = [
@@ -126,7 +126,7 @@ class BaiduHi(object):
         ret.read()
         ret = self._apiReqest('check', v=30, time=timechecksum())
         if ret['result'] == 'ok':
-            # self._cookiejar.save()
+            self._cookiejar.save()
             # self.password = None
             return True
         elif stage >= 2:
