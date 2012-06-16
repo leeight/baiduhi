@@ -51,11 +51,11 @@ ch = logging.StreamHandler()
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-fh = logging.handlers.WatchedFileHandler('./baiduhi.log', encoding='gb18030')
+fh = logging.handlers.WatchedFileHandler('./logs/baiduhi.log', encoding='gb18030')
 fh.setFormatter(formatter)
 logger.addHandler(fh)
 
-__cookies__ = os.path.join(os.path.dirname(__file__), 'cookies.txt')
+__cookies__ = os.path.join(os.path.dirname(__file__), 'cookies', 'baiduhi.txt')
 
 __default_answer_map__ = {
     u'你好': u'你也好~',
