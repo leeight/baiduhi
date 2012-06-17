@@ -15,7 +15,6 @@ import time
 import random
 import string
 import cgi
-import subprocess
 try:
     import simplejson as json
 except ImportError:
@@ -107,7 +106,6 @@ class BaiduHi(object):
         self.registerKeyword('time', do_time)
         self.registerKeyword('help', self.handleHelp)
         self.registerKeyword('about', do_about)
-        self.registerKeyword('cmd', do_cmd)
 
 
     @property
@@ -540,20 +538,6 @@ def do_time(income, sender, gid):
     u"""显示当前日期时间."""
     question = stripKeyword(income, 'time:')
     return unicode(time.strftime("%Y年%m月%d日 %H:%M:%S"), 'utf-8')
-
-def do_cmd(income, sender, gid):
-    u"""执行一个shell命令."""
-    cmd = stripKeyword(income, 'cmd ')
-    logging.debug('Run command: [%s]', cmd)
-    try:
-        proc = subprocess.Popen(re.split(r'\s+', cmd), stdout = subprocess.PIPE)
-        (stdoutdata, stderrdata) = proc.communicate()
-        if proc.returncode != 0:
-            return stderrdata
-        else:
-            return stdoutdata
-    except Exception:
-        return None
 
 def do_about(income, sender, gid):
     u"""显示机器人关于信息."""
